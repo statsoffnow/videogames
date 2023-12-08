@@ -1,0 +1,41 @@
+library(readr)
+library(dplyr)
+
+url <-'https://raw.githubusercontent.com/statsoffnow/videogames/main/vgsales.csv' 
+
+games <- read_csv(url)
+View(games)
+
+# What percentage does each platform represent in the given dataset?
+games %>% 
+  count(Platform) %>%
+  mutate(prop.table(n),
+         percent = prop.table(n)*100) %>%
+  print(n = 50)
+ 
+
+# Arrange the percentages in descending order 
+games %>% 
+  count(Platform) %>%
+  mutate(prop.table(n),
+         percent = prop.table(n)*100) %>%
+  arrange(desc(percent)) %>%
+  print(n=50)
+
+
+
+
+games %>%
+  select(Publisher, Platform) %>%
+  group_by(Publisher) %>%
+  count(Platform) %>%
+  mutate(percent = prop.table(n)*100) %>%
+  print(n=50)
+
+sales_by_platform <-
+games %>%
+  select(Platform, Global_Sales) %>%
+  group_by(Platform) %>%
+  summarise(g_sales = mean(Global_Sales)) %>%
+  arrange(desc(g_sales)) %>%
+  print(n = 31)
